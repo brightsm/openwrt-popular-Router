@@ -45,6 +45,7 @@ jobs:
     - name: download arm-fsl-gcc4.4.4      
       working-directory: /workdir
       run: |
+        cd ~
         pwd
         mkdir imx28-gcc
         cd imx28-gcc
