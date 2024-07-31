@@ -44,13 +44,12 @@ jobs:
     
     - name: download arm-fsl-gcc4.4.4
       run: |
-        cd /
-        mkdir workdir
-        cd /workdir
+      working-directory: /workdir
         curl -L -C - "https://d.pcs.baidu.com/file/8a9bb6f4bq88eee86c4b299543f855c0?fid=3120885459-250528-889781367824644&rt=pr&sign=FDtAERK-DCb740ccc5511e5e8fedcff06b081203-KwrygdXpEmndAnbqbqAinzWJTiM%3D&expires=8h&chkbd=0&chkv=0&dp-logid=4090482220489689309&dp-callid=0&dstime=1722408680&r=775891293&vuk=3120885459&origin_appid=15195230&file_type=0&access_token=123.12cdfdc96975541ff76e5427164c947b.YmqseDMjHZAp3aNXlxk8ppJ44d5eFAVlLQR89j5.LBT4oA" -o "gcc-4.4.4-glibc-2.11.1-multilib-1.0_EasyARM-iMX283.tar.bz2" -A "pan.baidu.com" -b "BDUSS=09zZzdVYVlIbnRldEI0Qnh6NnlBUWpZNHMwQjc1ZHF6QkktckRnTWZWRVd6aWxtRVFBQUFBJCQAAAAAAAAAAAEAAACgugwAYnJpZ2h0c20AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZBAmYWQQJmR"
     
     - name: download bunzip2
       run: |
+      working-directory: /workdir
         sudo apt install bzip2
         bunzip2 gcc-4.4.4-glibc-2.11.1-multilib-1.0_EasyARM-iMX283.tar.bz2
         sudo apt upgrade tar
@@ -62,8 +61,7 @@ jobs:
         export PATH=/opt/arm-fsl-linux-gnueabi/bin:$PATH
         export LD_LIBRARY_PATH=/opt/arm-fsl-linux-gnueabi/lib:$LD_LIBRARY_PATH
         sudo apt-get update
-        sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
-        cd /workdir
+        sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386      
         arm-fsl-linux-gnueabi-gcc -v        
       
     - name: SSH connection to Actions
