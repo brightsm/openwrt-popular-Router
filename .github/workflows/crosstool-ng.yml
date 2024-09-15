@@ -41,7 +41,7 @@ jobs:
           cp *.log ../
           cd ..
           mkdir armv5te-arm926ejs-build          
-          cp imx280a_cross_toolchain.config .config 
+          cp imx280a_cross_toolchain.config armv5te-arm926ejs-build/.config 
           cd armv5te-arm926ejs-build
           ct-ng build
           ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc -v > cross_toolchain_version.log
