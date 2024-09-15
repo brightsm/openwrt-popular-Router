@@ -58,15 +58,14 @@ jobs:
 
       # 创建 GitHub Release 并上传文件
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1  # 使用 v1 版本
+      uses: actions/upload-artifact@v4
+
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: |
-          crosstool-ng/*.log
+        name: my-artifact
+        path: path/**/[abc]rtifac?/*
         
       # 删除旧的工作流运行记录（可选）
     - name: Delete workflow runs
