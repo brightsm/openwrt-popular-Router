@@ -37,7 +37,15 @@ jobs:
           make
           sudo make install
           ct-ng -v >CompileResult.log
-          history >command.log 
+          history >command.log
+          cp *.log ../
+          cd ..
+          mkdir armv5te-arm926ejs-build          
+          cp imx280a_cross_toolchain.config .config 
+          cd armv5te-arm926ejs-build
+          ct-ng build
+          ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc -v > cross_toolchain_version.log
+          cp cross_toolchain_version.log ../
           
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -48,6 +56,7 @@ jobs:
 
       # 创建 GitHub Release 并上传文件
     - name: Upload firmware to release
+    # https://github.com/actions/upload-artifact/blob/main/README.md#v4---whats-new
       uses: actions/upload-artifact@v4
       with:
         name: crosstool-ng-log
