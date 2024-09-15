@@ -58,20 +58,16 @@ jobs:
 
       # 创建 GitHub Release 并上传文件
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v3  # 使用最新版本
+      uses: softprops/action-gh-release@v1  # 使用 v1 版本
       if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        name: Release ${{ steps.tag.outputs.release_tag }}
-        body: |
-            #这是自动生成的发布，包含以下文件：
-            - crosstool-ng/*.log
+        body_path: release.txt
         files: |
-            crosstool-ng/*.log  # 确保此路径下有要上传的文件
-    #        firmware/*.bin        # 示例：上传固件文件
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          crosstool-ng/*.log
+        
       # 删除旧的工作流运行记录（可选）
     - name: Delete workflow runs
       uses: bigtan/delete-workflow-runs@main
