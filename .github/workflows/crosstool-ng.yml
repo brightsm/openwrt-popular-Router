@@ -37,7 +37,7 @@ jobs:
           make
           sudo make install
           ct-ng -v >CompileResult.log
-          histroy >command.log 
+          history >command.log 
           
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
