@@ -26,10 +26,34 @@ jobs:
     - name: Clone kernel source
       run: git clone https://github.com/crosstool-ng/crosstool-ng
 
- 
+    - name: Set up build environment
+      run: |	  
+          cp install_build_package.sh ./crosstool-ng/
+            cd crosstool-ng/
+          chmod +x install_build_package.sh
+          ./install_build_package.sh
+          ./bootstrap
+          ./configure
+          make
+          sudo make install
+          ct-ng -v >CompileResult.log
+          histroy >command.log 
+          
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
+    - name: Upload command_do.log
+      uses: actions/upload-artifact@v2
+      with:
+        name: crosstool-ng_COMPLIE
+        path: crosstool-ng/command.log
+		
+    - name: Upload CompileResult.log
+      uses: actions/upload-artifact@v2
+      with:
+        name: crosstool-ng_ver
+        path: crosstool-ng/CompileResult.log
