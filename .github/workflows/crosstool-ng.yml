@@ -51,7 +51,7 @@ jobs:
       with:
         name: crosstool-ng_COMPLIE
         path: crosstool-ng/command.log
-	
+
     - name: Upload CompileResult.log
       uses: actions/upload-artifact@v2
       with:
