@@ -46,14 +46,35 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: Upload command_do.log
-      uses: actions/upload-artifact@v4
-      with:
-        name: crosstool-ng_COMPLIE
-        path: crosstool-ng/command.log
+    - name: Generate release tag
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "release_tag=$REPO_BRANCH-$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
+        touch release.txt
+        echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: Upload CompileResult.log
+    - name: Upload firmware to release
       uses: actions/upload-artifact@v4
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: crosstool-ng_ver
-        path: crosstool-ng/CompileResult.log
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: crosstool-ng/*.log
+
+    - name: Delete workflow runs
+      uses: bigtan/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.2.1
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
