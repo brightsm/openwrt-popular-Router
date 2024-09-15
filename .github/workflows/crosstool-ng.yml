@@ -47,13 +47,13 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     - name: Upload command_do.log
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: crosstool-ng_COMPLIE
         path: crosstool-ng/command.log
 
     - name: Upload CompileResult.log
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: crosstool-ng_ver
         path: crosstool-ng/CompileResult.log
