@@ -46,23 +46,9 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-# 生成发布标签
-    - name: Generate release tag
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-          # 从当前分支名生成标签，例如 main-2024.04.27
-          release_tag="${GITHUB_REF##*/}-$(date +'%Y.%m.%d')"
-          echo "release_tag=${release_tag}" >> $GITHUB_OUTPUT
-          echo "status=success" >> $GITHUB_OUTPUT
-
       # 创建 GitHub Release 并上传文件
     - name: Upload firmware to release
       uses: actions/upload-artifact@v4
-
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         name: my-artifact
         path: path/**/[abc]rtifac?/*
