@@ -46,35 +46,45 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
+# 生成发布标签
     - name: Generate release tag
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$REPO_BRANCH-$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
-        touch release.txt
-        echo "status=success" >> $GITHUB_OUTPUT
+          # 从当前分支名生成标签，例如 main-2024.04.27
+          release_tag="${GITHUB_REF##*/}-$(date +'%Y.%m.%d')"
+          echo "release_tag=${release_tag}" >> $GITHUB_OUTPUT
+          echo "status=success" >> $GITHUB_OUTPUT
 
+      # 创建 GitHub Release 并上传文件
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3  # 使用最新版本
       if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: crosstool-ng/*.log
+        name: Release ${{ steps.tag.outputs.release_tag }}
+        body: |
+            #这是自动生成的发布，包含以下文件：
+            - crosstool-ng/*.log
+        files: |
+            crosstool-ng/*.log  # 确保此路径下有要上传的文件
+    #        firmware/*.bin        # 示例：上传固件文件
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # 删除旧的工作流运行记录（可选）
     - name: Delete workflow runs
       uses: bigtan/delete-workflow-runs@main
       with:
-        retain_days: 1
-        keep_minimum_runs: 3
+          retain_days: 1
+          keep_minimum_runs: 3
 
+      # 删除旧的发布（可选）
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.2.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 3
-        delete_tags: true
+          keep_latest: 3
+          delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
