@@ -33,7 +33,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@maiin
+      uses: actions/checkout@main
       
     - name: Clone source code     
       run: |
