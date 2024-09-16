@@ -64,9 +64,9 @@ jobs:
           cp $GITHUB_WORKSPACE/imx280a_cross_toolchain.config  $GITHUB_WORKSPACE/armv5te-arm926ejs-build/.config 
           cd  $GITHUB_WORKSPACE/armv5te-arm926ejs-build
           ct-ng build
-          ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc --version > "cross_toolchain_version.log" 2>&1 
-          cp cross_toolchain_version.log  $GITHUB_WORKSPACE/
-          cd $GITHUB_WORKSPACE/
+          #./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc --version > "cross_toolchain_version.log" 2>&1 
+          #cp cross_toolchain_version.log  $GITHUB_WORKSPACE/
+          #cd $GITHUB_WORKSPACE/
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
