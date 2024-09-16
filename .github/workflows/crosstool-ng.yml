@@ -23,13 +23,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Clone kernel source
+    - name: Clone crosstool-ng source
       run: git clone https://github.com/crosstool-ng/crosstool-ng
 
     - name: Set up build environment
       run: |	  
           cp install_build_package.sh ./crosstool-ng/
-            cd crosstool-ng/
+    - name: Compile crosstool-ng
+      run: |	  
+          cd crosstool-ng/
           chmod +x install_build_package.sh
           ./install_build_package.sh
           ./bootstrap
@@ -40,13 +42,15 @@ jobs:
           history >command.log
           cp *.log ../
           cd ..
+    - name: Compile imx280a_cross_toolchain
+      run: |
           mkdir armv5te-arm926ejs-build          
           cp imx280a_cross_toolchain.config armv5te-arm926ejs-build/.config 
           cd armv5te-arm926ejs-build
           ct-ng build
           ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc -v > cross_toolchain_version.log
           cp cross_toolchain_version.log ../
-          
+          cd ..
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
@@ -59,8 +63,8 @@ jobs:
     # https://github.com/actions/upload-artifact/blob/main/README.md#v4---whats-new
       uses: actions/upload-artifact@v4
       with:
-        name: crosstool-ng-log
-        path: crosstool-ng/*.log
+        name: crosstool-ng-doing-log
+        path: ./*.log
         
       # 删除旧的工作流运行记录（可选）
     - name: Delete workflow runs
