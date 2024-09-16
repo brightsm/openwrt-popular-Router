@@ -80,7 +80,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: crosstool-ng-doing-log
-        path: ./*.log
+        path:  $GITHUB_WORKSPACE/*.log
         
       # 删除旧的工作流运行记录（可选）
     - name: Delete workflow runs
