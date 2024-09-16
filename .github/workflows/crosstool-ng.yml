@@ -65,7 +65,7 @@ jobs:
           cd  $GITHUB_WORKSPACE/armv5te-arm926ejs-build
           ct-ng build
           ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc -v > cross_toolchain_version.log
-          cp cross_toolchain_version.log cd $GITHUB_WORKSPACE/
+          cp cross_toolchain_version.log  $GITHUB_WORKSPACE/
           cd $GITHUB_WORKSPACE/
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
