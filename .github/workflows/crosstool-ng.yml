@@ -16,12 +16,10 @@ on:
         default: 'false'
 env:
   #REPO_URL: https://githubfast.com/bwnqx/immortalwrt-mt798x
-  REPO_URL: https://github.com/bwnqx/immortalwrt-mt798x
-  REPO_BRANCH: openwrt-21.02
-  FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: RAX3000M-237-3km.config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  REPO_URL: https://github.com/crosstool-ng/crosstool-ng
+  REPO_BRANCH: master  
+  CONFIG_FILE: imx280a_cross_toolchain.config
+  DIY_P1_SH: install_build_package.sh  
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -35,17 +33,20 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Clone crosstool-ng source
-      run: git clone https://github.com/crosstool-ng/crosstool-ng
-
+      uses: actions/checkout@maiin
+      
+    - name: Clone source code     
+      run: |
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH crosstool-ng
+        ln -sf /workdir/crosstool-ng $GITHUB_WORKSPACE/crosstool-ng
+      
     - name: Set up build environment
       run: |	  
-          cp install_build_package.sh ./crosstool-ng/
+          cp $GITHUB_WORKSPACE/install_build_package.sh $GITHUB_WORKSPACE/crosstool-ng/
     - name: Compile crosstool-ng
       run: |	  
-          cd crosstool-ng/
+          cd $GITHUB_WORKSPACE/crosstool-ng/
           chmod +x install_build_package.sh
           ./install_build_package.sh
           ./bootstrap
@@ -54,17 +55,18 @@ jobs:
           sudo make install
           ct-ng -v >CompileResult.log
           history >command.log
-          cp *.log ../
-          cd ..
+          cp *.log $GITHUB_WORKSPACE/
+          
     - name: Compile imx280a_cross_toolchain
       run: |
+          cd $GITHUB_WORKSPACE/
           mkdir armv5te-arm926ejs-build          
-          cp imx280a_cross_toolchain.config armv5te-arm926ejs-build/.config 
-          cd armv5te-arm926ejs-build
+          cp cd $GITHUB_WORKSPACE/imx280a_cross_toolchain.config cd $GITHUB_WORKSPACE/armv5te-arm926ejs-build/.config 
+          cd  $GITHUB_WORKSPACE/armv5te-arm926ejs-build
           ct-ng build
           ./arm-926ejs-linux-gnueabi/bin/arm-926ejs-linux-gnueabi-gcc -v > cross_toolchain_version.log
-          cp cross_toolchain_version.log ../
-          cd ..
+          cp cross_toolchain_version.log cd $GITHUB_WORKSPACE/
+          cd $GITHUB_WORKSPACE/
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
