@@ -78,7 +78,7 @@ jobs:
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-	
+
     - name: Upload bin directory
       uses: actions/upload-artifact@main
 	  # “UPLOAD_BIN_DIR”在最前面
@@ -86,7 +86,7 @@ jobs:
       with:
         name: imx280a_toolchain_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path:  $GITHUB_WORKSPACE/output
-		
+
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -103,7 +103,7 @@ jobs:
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
           echo "::set-output name=status::success"	   
-	   
+
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
