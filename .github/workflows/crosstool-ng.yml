@@ -81,7 +81,7 @@ jobs:
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
-	  # “UPLOAD_BIN_DIR”在最前面
+# “UPLOAD_BIN_DIR”在最前面
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: imx280a_toolchain_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
