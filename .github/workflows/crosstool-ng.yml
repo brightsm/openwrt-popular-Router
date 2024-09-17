@@ -71,6 +71,8 @@ jobs:
           #cd $GITHUB_WORKSPACE/
           #echo "FIRMWARE=$PWD" >> $GITHUB_ENV        
           #echo "{status}={success}" >> $GITHUB_OUTPUT
+          tar -czf g++_include.tar.gz /home/x-tools/arm-926ejs-linux-gnueabi/arm-926ejs-linux-gnueabi/include
+          mv g++_include.tar.gz $GITHUB_WORKSPACE/output/g++_include.tar.gz
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
