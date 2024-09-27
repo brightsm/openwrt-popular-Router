@@ -44,6 +44,7 @@ jobs:
     - name: Set up build environment
       run: |	  
           cp $GITHUB_WORKSPACE/install_build_package.sh $GITHUB_WORKSPACE/crosstool-ng/
+          mkdir output
     - name: Compile crosstool-ng
       run: |	  
           cd $GITHUB_WORKSPACE/                    
@@ -95,9 +96,7 @@ jobs:
       run: |          
           cd $GITHUB_WORKSPACE/
           tar -czf binfile.tar.gz binfile
-          mkdir output
           mv binfile.tar.gz ./output/binfile.tar.gz
-
           
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
