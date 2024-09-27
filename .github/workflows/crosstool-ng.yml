@@ -77,7 +77,20 @@ jobs:
           tar -czf g++_include.tar.gz output/
           cd output
           rm -f *
-          mv ../g++_include.tar.gz ./          
+          mv ../g++_include.tar.gz ./
+          
+    - name: Compile imx280a_cross_toolchain
+      run: |
+          cd $GITHUB_WORKSPACE/
+          git clone https://github.com/brightsm/elftosb
+          cd ./elftosb
+          make
+          mkdir elftosb_bin
+          cp ./bld/linux/elftosb ./elftosb_bin
+          cp ./bld/linux/keygen ./elftosb_bin
+          cp ./bld/linux/sbtool ./elftosb_bin
+          tar -czf elftosb_bin.tar.gz ./elftosb_bin
+          cp elftosb_bin.tar.gz $GITHUB_WORKSPACE/ouput
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
