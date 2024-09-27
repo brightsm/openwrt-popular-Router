@@ -46,8 +46,7 @@ jobs:
           cp $GITHUB_WORKSPACE/install_build_package.sh $GITHUB_WORKSPACE/crosstool-ng/
     - name: Compile crosstool-ng
       run: |	  
-          cd $GITHUB_WORKSPACE/
-          mkdir output          
+          cd $GITHUB_WORKSPACE/                    
           cd $GITHUB_WORKSPACE/crosstool-ng/
           chmod +x install_build_package.sh
           ./install_build_package.sh
@@ -89,13 +88,14 @@ jobs:
           cp ./bld/linux/elftosb ./elftosb_bin
           cp ./bld/linux/keygen ./elftosb_bin
           cp ./bld/linux/sbtool ./elftosb_bin
-          tar -czf elftosb_bin.tar.gz /elftosb_bin
+          tar -czf elftosb_bin.tar.gz elftosb_bin
           cp elftosb_bin.tar.gz $GITHUB_WORKSPACE/binfile
           
     - name: compress bin file
       run: |          
           cd $GITHUB_WORKSPACE/
           tar -czf binfile.tar.gz binfile
+          mkdir output
           mv binfile.tar.gz ./output/binfile.tar.gz
 
           
