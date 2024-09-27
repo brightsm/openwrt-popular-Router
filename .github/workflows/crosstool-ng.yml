@@ -79,7 +79,7 @@ jobs:
           rm -f *
           mv ../g++_include.tar.gz ./
           
-    - name: Compile imx280a_cross_toolchain
+    - name: Compile elftosb tool
       run: |
           cd $GITHUB_WORKSPACE/
           git clone https://github.com/brightsm/elftosb
