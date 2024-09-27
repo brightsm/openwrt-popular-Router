@@ -62,6 +62,7 @@ jobs:
     - name: Compile imx280a_cross_toolchain
       run: |
           cd $GITHUB_WORKSPACE/
+          mkdir binfile
           mkdir armv5te-arm926ejs-build          
           cp $GITHUB_WORKSPACE/imx280a_cross_toolchain.config  $GITHUB_WORKSPACE/armv5te-arm926ejs-build/.config 
           cd  $GITHUB_WORKSPACE/armv5te-arm926ejs-build
@@ -72,12 +73,7 @@ jobs:
           #echo "FIRMWARE=$PWD" >> $GITHUB_ENV        
           #echo "{status}={success}" >> $GITHUB_OUTPUT
           tar -czf g++_include.tar.gz x-tools/arm-926ejs-linux-gnueabi/arm-926ejs-linux-gnueabi/include/
-          mv g++_include.tar.gz $GITHUB_WORKSPACE/output/g++_include.tar.gz
-          cd $GITHUB_WORKSPACE/
-          tar -czf g++_include.tar.gz output/
-          cd output
-          rm -f *
-          mv ../g++_include.tar.gz ./
+          mv g++_include.tar.gz $GITHUB_WORKSPACE/binfile/g++_include.tar.gz
           
     - name: Compile elftosb tool
       run: |
@@ -86,16 +82,23 @@ jobs:
           cd ./elftosb
           make
 
-    - name: Compile elftosb tool
+    - name: copy elftosb tool
       run: |
           cd $GITHUB_WORKSPACE/elftosb
           mkdir elftosb_bin
           cp ./bld/linux/elftosb ./elftosb_bin
           cp ./bld/linux/keygen ./elftosb_bin
           cp ./bld/linux/sbtool ./elftosb_bin
-          tar -czf elftosb_bin.tar.gz ./elftosb_bin
-          cp elftosb_bin.tar.gz $GITHUB_WORKSPACE/ouput
+          tar -czf elftosb_bin.tar.gz /elftosb_bin
+          cp elftosb_bin.tar.gz $GITHUB_WORKSPACE/binfile
+          
+    - name: compress bin file
+      run: |          
+          cd $GITHUB_WORKSPACE/
+          tar -czf binfile.tar.gz ./binfile
+          mv binfile.tar.gz ./output/binfile.tar.gz
 
+          
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
