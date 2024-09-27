@@ -85,6 +85,10 @@ jobs:
           git clone https://github.com/brightsm/elftosb
           cd ./elftosb
           make
+
+    - name: Compile elftosb tool
+      run: |
+          cd $GITHUB_WORKSPACE/elftosb
           mkdir elftosb_bin
           cp ./bld/linux/elftosb ./elftosb_bin
           cp ./bld/linux/keygen ./elftosb_bin
