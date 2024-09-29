@@ -83,6 +83,11 @@ jobs:
           #echo "{status}={success}" >> $GITHUB_OUTPUT
           tar -czf g++_include.tar.gz x-tools/arm-926ejs-linux-gnueabi/arm-926ejs-linux-gnueabi/include/
           mv g++_include.tar.gz $GITHUB_WORKSPACE/binfile/g++_include.tar.gz
+          cd $GITHUB_WORKSPACE/
+          echo "Compile crosstool-ng compelete" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          pwd >> $GITHUB_WORKSPACE/output/shellcommand.log
+          echo "get filelist:" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          ls -l >> $GITHUB_WORKSPACE/output/shellcommand.log
           
     - name: Compile elftosb tool
       run: |
