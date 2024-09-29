@@ -96,12 +96,17 @@ jobs:
           cd $GITHUB_WORKSPACE/
           wget https://ftp.denx.de/pub/u-boot/u-boot-2020.07-rc4.tar.bz2
           tar -xf u-boot-2020.07-rc4.tar.bz2
-          rm -f ./u-boot-2020.07-rc4/setenv.sh
-          cp -f ./imx280a_resource/ubootForImx280a/* ./u-boot-2020.07-rc4
+          
+          cp  ./imx280a_resource/ubootForImx280a/0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch ./u-boot-2020.07-rc4
           cd u-boot-2020.07-rc4
           patch -p1 < 0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch
+          cd ..
+          cp  ./imx280a_resource/ubootForImx280a/build_auto.sh ./u-boot-2020.07-rc4
+          cp -f ./imx280a_resource/ubootForImx280a/setenv.sh ./u-boot-2020.07-rc4
+          cd u-boot-2020.07-rc4
           chmod +x build_auto.sh
           ./build_auto.sh
+          
     - name: orgnize u-boot file
       run: |
           cd $GITHUB_WORKSPACE/u-boot-2020.07-rc4
