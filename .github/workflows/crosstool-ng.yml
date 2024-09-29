@@ -37,17 +37,27 @@ jobs:
       
     - name: Clone source code     
       run: |
-        df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH crosstool-ng
-        ln -sf /workdir/crosstool-ng $GITHUB_WORKSPACE/crosstool-ng
+          mkdir output
+          echo "Clone source code" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          echo "get first enter github actiong system path:" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          pwd >> $GITHUB_WORKSPACE/output/shellcommand.log
+          echo "get filelist:" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          ls -l >> $GITHUB_WORKSPACE/output/shellcommand.log
+          df -hT $PWD
+          git clone $REPO_URL -b $REPO_BRANCH crosstool-ng
+          ln -sf /workdir/crosstool-ng $GITHUB_WORKSPACE/crosstool-ng
       
     - name: Set up build environment
       run: |	  
           cp $GITHUB_WORKSPACE/install_build_package.sh $GITHUB_WORKSPACE/crosstool-ng/
-          mkdir output
+          
     - name: Compile crosstool-ng
       run: |	  
-          cd $GITHUB_WORKSPACE/                    
+          cd $GITHUB_WORKSPACE/
+          echo "Compile crosstool-ng" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          pwd >> $GITHUB_WORKSPACE/output/shellcommand.log
+          echo "get filelist:" >> $GITHUB_WORKSPACE/output/shellcommand.log
+          ls -l >> $GITHUB_WORKSPACE/output/shellcommand.log
           cd $GITHUB_WORKSPACE/crosstool-ng/
           chmod +x install_build_package.sh
           ./install_build_package.sh
@@ -56,7 +66,6 @@ jobs:
           make
           sudo make install
           ct-ng -v >$GITHUB_WORKSPACE/output/CompileResult.log
-          history >$GITHUB_WORKSPACE/output/command.log
           
           
     - name: Compile imx280a_cross_toolchain
@@ -81,6 +90,26 @@ jobs:
           git clone https://github.com/brightsm/elftosb
           cd ./elftosb
           make
+          
+    - name: Compile u-boot
+      run: |
+          cd $GITHUB_WORKSPACE/
+          wget https://ftp.denx.de/pub/u-boot/u-boot-2020.07-rc4.tar.bz2
+          tar -xf u-boot-2020.07-rc4.tar.bz2 ./u-boot-2020.07-rc4          
+          cp ./imx280a_resource/ubootForImx280a/* u-boot-2020.07-rc4
+          cd u-boot-2020.07-rc4
+          patch -p1 < 0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch
+          chmod +x build_auto.sh
+          ./build_auto.sh
+    - name: orgnize u-boot file
+      run: |
+          cd $GITHUB_WORKSPACE/u-boot-2020.07-rc4
+          mkdir imx-uboot-bin
+          cp u-boot.sb ./imx-uboot-bin
+          cp u-boot ./imx-uboot-bin
+          tar -czf imx280a-ubootbin.tar.gz imx-uboot-bin
+          cp imx280a-ubootbin.tar.gz $GITHUB_WORKSPACE/binfile
+          
 
     - name: copy elftosb tool
       run: |
