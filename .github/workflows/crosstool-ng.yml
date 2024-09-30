@@ -106,18 +106,15 @@ jobs:
     - name: Compile u-boot
       run: |
           cd $GITHUB_WORKSPACE/
-          wget https://ftp.denx.de/pub/u-boot/u-boot-2020.07-rc4.tar.bz2
-          mkdir -p u-boot-2020.07-rc4
-          tar -xjf u-boot-2020.07-rc4.tar.bz2 -C ./u-boot-2020.07-rc4
+          wget https://ftp.denx.de/pub/u-boot/u-boot-2020.07-rc4.tar.bz2          
+          tar -xjf u-boot-2020.07-rc4.tar.bz2 -C ./
           echo "u-boot-2020.07-rc4" >> $GITHUB_WORKSPACE/output/shellcommand.log
           find $GITHUB_WORKSPACE -type d -name "u-boot-2020.07-rc4" -exec tree {} \; >> $GITHUB_WORKSPACE/output/shellcommand.log
           cp  ./imx280a_resource/ubootForImx280a/0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch ./u-boot-2020.07-rc4
-          cd u-boot-2020.07-rc4
-          patch -p1 < 0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch
-          cd ..
-          cp  ./imx280a_resource/ubootForImx280a/build_auto.sh ./u-boot-2020.07-rc4
-          cp -f ./imx280a_resource/ubootForImx280a/setenv.sh ./u-boot-2020.07-rc4
-          cd u-boot-2020.07-rc4
+          cd $GITHUB_WORKSPACE/u-boot-2020.07-rc4
+          patch -p1 < 0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch          
+          cp  ./imx280a_resource/ubootForImx280a/build_auto.sh ./
+          cp -f ./imx280a_resource/ubootForImx280a/setenv.sh ./          
           chmod +x build_auto.sh
           ./build_auto.sh
           
