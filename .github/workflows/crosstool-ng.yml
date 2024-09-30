@@ -108,7 +108,7 @@ jobs:
           cd $GITHUB_WORKSPACE/
           wget https://ftp.denx.de/pub/u-boot/u-boot-2020.07-rc4.tar.bz2
           mkdir -p u-boot-2020.07-rc4
-          tar -xf u-boot-2020.07-rc4.tar.bz2  ./u-boot-2020.07-rc4
+          tar -xjf u-boot-2020.07-rc4.tar.bz2 -C ./u-boot-2020.07-rc4
           echo "u-boot-2020.07-rc4" >> $GITHUB_WORKSPACE/output/shellcommand.log
           find $GITHUB_WORKSPACE -type d -name "u-boot-2020.07-rc4" -exec tree {} \; >> $GITHUB_WORKSPACE/output/shellcommand.log
           cp  ./imx280a_resource/ubootForImx280a/0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch ./u-boot-2020.07-rc4
