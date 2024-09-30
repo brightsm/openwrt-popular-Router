@@ -35,17 +35,17 @@ export PATH=${elftosb_PATH}:$PATH
 # 检查路径是否存在
 if [ ! -d "${WORK_BASE}" ]; then
     echo "Error: WORK_BASE directory ${WORK_BASE} does not exist."
-    exit 1
+    #exit 1
 fi
 
 if [ ! -d "${CROSS_COMPILE_DIR}" ]; then
     echo "Error: CROSS_COMPILE_DIR directory ${CROSS_COMPILE_DIR} does not exist."
-    exit 1
+    #exit 1
 fi
 
 if [ ! -d "${elftosb_PATH}" ]; then
     echo "Error: elftosb_PATH directory ${elftosb_PATH} does not exist."
-    exit 1
+    #exit 1
 fi
 
 echo "Environment setup complete."
