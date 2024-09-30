@@ -20,7 +20,7 @@ export CROSS_COMPILE=arm-926ejs-linux-gnueabi-
 # export CROSS_COMPILE=arm-fsl-linux-gnueabi-
 
 # 设置交叉编译工具链目录
-export CROSS_COMPILE_DIR=${TOP_DIR}/x-tools/arm-926ejs-linux-gnueabi/bin
+export CROSS_COMPILE_DIR=${TOP_DIR}/armv5te-arm926ejs-build/x-tools/arm-926ejs-linux-gnueabi/bin
 # export CROSS_COMPILE_DIR=${WORK_BASE}/toolchain/arm-fsl-linux-gnueabi/bin
 
 # 将交叉编译工具链目录添加到 PATH
