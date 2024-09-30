@@ -116,6 +116,7 @@ jobs:
           cp  $GITHUB_WORKSPACE/imx280a_resource/ubootForImx280a/build_auto.sh ./
           cp -f $GITHUB_WORKSPACE/imx280a_resource/ubootForImx280a/setenv.sh ./          
           chmod +x build_auto.sh
+          ls -a -l  >> $GITHUB_WORKSPACE/output/shellcommand.log
           ./build_auto.sh
           
     - name: orgnize u-boot file
