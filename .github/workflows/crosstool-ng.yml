@@ -113,8 +113,8 @@ jobs:
           cp  ./imx280a_resource/ubootForImx280a/0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch ./u-boot-2020.07-rc4
           cd $GITHUB_WORKSPACE/u-boot-2020.07-rc4
           patch -p1 < 0001-u-boot-2020.07-rc4_port_for_easyarm_imx280a.patch          
-          cp  ./imx280a_resource/ubootForImx280a/build_auto.sh ./
-          cp -f ./imx280a_resource/ubootForImx280a/setenv.sh ./          
+          cp  $GITHUB_WORKSPACE/imx280a_resource/ubootForImx280a/build_auto.sh ./
+          cp -f $GITHUB_WORKSPACE/imx280a_resource/ubootForImx280a/setenv.sh ./          
           chmod +x build_auto.sh
           ./build_auto.sh
           
