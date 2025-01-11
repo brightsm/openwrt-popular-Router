@@ -14,6 +14,7 @@ on:
         default: 'false'
 
 env:
+  #REPO_URL: https://github.com/brightsm/u-boot_mt7620
   REPO_URL: https://github.com/brightsm/u-boot_mt7620
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
