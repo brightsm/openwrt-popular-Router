@@ -15,7 +15,8 @@ on:
 
 env:
   #REPO_URL: https://github.com/brightsm/u-boot_mt7620
-  REPO_URL: https://github.com/brightsm/ralink_uboot
+  #REPO_URL: https://github.com/brightsm/ralink_uboot
+  REPO_URL: https://github.com/brightsm/u-boot_mtk
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: HG255D_LEDE.config
