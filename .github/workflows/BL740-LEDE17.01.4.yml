@@ -17,7 +17,7 @@ on:
 
 env:
   REPO_URL: https://github.com/brightsm/openwrt/
-  REPO_BRANCH: master
+  REPO_BRANCH: lede-17.01
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: BL740-LEDE-17.01.4.config
   DIY_P1_SH: diy-part1.sh
