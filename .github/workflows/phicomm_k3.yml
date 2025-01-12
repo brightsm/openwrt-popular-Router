@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: build-Phicomm-K3-Openwrt
+name: build-Phicomm-K3-LEDE
 #add autoaprepeater app
 
 # Controls when the action will run. 
