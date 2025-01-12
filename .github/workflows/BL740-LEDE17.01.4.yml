@@ -16,7 +16,7 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/brightsm/lede-17.01.4-Mod
+  REPO_URL: https://github.com/brightsm/openwrt/
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: BL740-LEDE-17.01.4.config
