@@ -115,7 +115,7 @@ jobs:
         cd openwrt
         ls -l -a
         ls ./build_dir -l -a
-        tree ./build_dir > ./bin/builddirinfo.txt
+        tree -d ./build_dir > ./bin/builddirinfo.txt
         cat ./bin/builddirinfo.txt
         ls ./bin -l -a
         tree ./bin        
