@@ -114,8 +114,11 @@ jobs:
       run: |
         cd openwrt
         ls -l -a
+        ls ./build_dir -l -a
         tree ./build_dir > ./bin/builddirinfo.txt
-        cp ./build_dir/target-mipsel_24kc_musl/linux-ramips_mt7620/linux-4.4.194/drivers/usb/option.c ./bin
+        cat ./bin/builddirinfo.txt
+        ls ./bin -l -a
+        tree ./bin        
         
     - name: Upload bin directory
       uses: actions/upload-artifact@main
