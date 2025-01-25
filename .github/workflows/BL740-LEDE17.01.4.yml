@@ -109,7 +109,11 @@ jobs:
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
-
+      
+    - name: copy option.c
+      run: |
+        cp ./build_dir/target-mipsel_24kc_musl/linux-ramips_mt7620/linux-4.4.194/drivers/usb/option.c ./openwrt/bin
+        
     - name: Upload bin directory
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
