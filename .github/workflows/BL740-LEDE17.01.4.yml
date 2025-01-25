@@ -113,12 +113,7 @@ jobs:
     - name: copy option.c
       run: |
         cd openwrt
-        ls -l -a
-        ls ./build_dir -l -a
-        tree -d ./build_dir > ./bin/targets/ramips/mt7620/builddirinfo.txt
-        cat ./bin/builddirinfo.txt
-        ls ./bin -l -a
-        tree ./bin        
+        cp ./build_dir/toolchain-mipsel_24kc_gcc-5.4.0_musl-1.1.16/linux/drivers/usb/serial/option.c ./bin/targets/ramips/mt7620/builddirinfo.txt       
         
     - name: Upload bin directory
       uses: actions/upload-artifact@main
