@@ -112,7 +112,11 @@ jobs:
       
     - name: copy option.c
       run: |
-        cp ./build_dir/target-mipsel_24kc_musl/linux-ramips_mt7620/linux-4.4.194/drivers/usb/option.c ./openwrt/bin
+        cd openwrt
+        ls -l -a
+        ls -l -a >dirinfo.txt
+        cp dirinfo.txt ./bin
+        cp ./build_dir/target-mipsel_24kc_musl/linux-ramips_mt7620/linux-4.4.194/drivers/usb/option.c ./bin
         
     - name: Upload bin directory
       uses: actions/upload-artifact@main
