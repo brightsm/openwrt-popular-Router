@@ -115,6 +115,7 @@ jobs:
         cd openwrt
         cp ./build_dir/toolchain-mipsel_24kc_gcc-5.4.0_musl-1.1.16/linux/drivers/usb/serial/option.c ./bin/targets/ramips/mt7620
         cp ./build_dir/toolchain-mipsel_24kc_gcc-5.4.0_musl-1.1.16/linux/drivers/usb/serial/testme3760 ./bin/targets/ramips/mt7620
+        find /workdir/openwrt -type f -name 'option.c' > ./bin/targets/ramips/mt7620/option_c_path.txt
         
     - name: Upload bin directory
       uses: actions/upload-artifact@main
