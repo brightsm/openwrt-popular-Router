@@ -2,7 +2,7 @@
 
 # This is a basic workflow to help you get started with Actions
 
-name: build_BL740_linkall
+name: build_BL740_23.05
 #add autoaprepeater app
 
 # Controls when the action will run. 
@@ -16,8 +16,8 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/chinaxinjiang/openwrt-4G5G-Router
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/brightsm/openwrt
+  REPO_BRANCH: openwrt-23.05
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: BL740-LEDE-17.01.4.config
   DIY_P1_SH: diy-part1.sh
