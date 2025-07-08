@@ -153,12 +153,12 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete workflow runs
-      uses: bigtan/delete-workflow-runs@v1
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
+    - name: Delete old workflow runs
+      run: |
+        gh api /repos/${{ github.owner }}/${{ github.repo }}/actions/runs | jq -r '.workflow_runs[].id' | xargs -I {} gh api -X DELETE /repos/${{ github.owner }}/${{ github.repo }}/actions/runs/{}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.2.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
