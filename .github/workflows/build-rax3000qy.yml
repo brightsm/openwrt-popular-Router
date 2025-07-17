@@ -19,9 +19,9 @@ on:
         required: false
         default: 'false'
 
-env:
-  #REPO_URL: https://github.com/openwrt/openwrt
-  REPO_URL: https://github.com/hzyitc/openwrt-redmi-ax3000
+env:  
+  #REPO_URL: https://github.com/hzyitc/openwrt-redmi-ax3000
+  REPO_URL: https://github.com/chinaxinjiang/openwrt-redmi-ax3000
   REPO_BRANCH: ipq50xx-mainline-kernel-5.15-openwrt-23.05
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: RAX3000QY-Qwrt-23.05.config
