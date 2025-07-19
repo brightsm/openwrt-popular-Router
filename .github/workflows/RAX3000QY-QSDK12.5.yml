@@ -26,7 +26,7 @@ env:
   #REPO_BRANCH: ipq50xx-mainline-kernel-5.15-openwrt-23.05
   REPO_BRANCH: 12.5.2783.2994
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: RAX3000QY-Qwrt-23.05.config
+  CONFIG_FILE: QSDK12.5test.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
