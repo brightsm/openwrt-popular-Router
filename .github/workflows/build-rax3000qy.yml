@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build RAX30000QY QWrt 23.05
+name: Build RAX30000QY OpenWrt 23.05
 
 on:
   repository_dispatch:
