@@ -1,16 +1,16 @@
 name: Build mbpoll for OpenWrt 24.10
 
 on:
-  repository_dispatch:
-    workflow_dispatch:
+  workflow_dispatch:
     inputs:
       ssh:
-        description: 'SSH connection to Actions'
+        description: 'Enable SSH connection to GitHub Actions runner'
         required: false
         default: 'false'
-    push:
+  push:
     tags:
       - "v*"
+
 jobs:
   build:
     runs-on: ubuntu-22.04
