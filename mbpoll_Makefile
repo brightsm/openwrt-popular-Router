@@ -24,10 +24,17 @@ define Package/mbpoll/description
   mbpoll is a command line Modbus master simulator
 endef
 
+# CMake 选项（可选）
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DLIBMODBUS_INCLUDE_DIR=$(STAGING_DIR)/usr/include \
+	-DLIBMODBUS_LIBRARY=$(STAGING_DIR)/usr/lib/libmodbus.so
+
 define Package/mbpoll/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/bin/
 endef
 
 $(eval $(call BuildPackage,mbpoll))
+
 
