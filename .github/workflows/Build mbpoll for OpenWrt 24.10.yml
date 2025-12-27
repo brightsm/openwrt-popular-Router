@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    env:
+      TERM: dumb
 
     steps:
     - name: Checkout repository
@@ -38,64 +40,63 @@ jobs:
         tar --use-compress-program=unzstd -xf openwrt-sdk-24.10.4-mediatek-filogic_gcc-13.3.0_musl.Linux-x86_64.tar.zst
         mv openwrt-sdk-24.10.4-mediatek-filogic_gcc-13.3.0_musl.Linux-x86_64 openwrt-sdk
 
-
     - name: Clone mbpoll source
       run: |
-        git clone https://github.com/epsilonrt/mbpoll.git
+        git clone --branch v1.5.2 https://github.com/epsilonrt/mbpoll.git
 
     - name: Create OpenWrt package for mbpoll
       run: |
         cd openwrt-sdk
         mkdir -p package/mbpoll
         cat > package/mbpoll/Makefile << 'EOF'
-        include \$(TOPDIR)/rules.mk
+include $(TOPDIR)/rules.mk
 
-        PKG_NAME:=mbpoll
-        PKG_VERSION:=1.6
-        PKG_RELEASE:=1
+PKG_NAME:=mbpoll
+PKG_VERSION:=1.5.2
+PKG_RELEASE:=1
 
-        PKG_SOURCE_PROTO:=git
-        PKG_SOURCE_URL:=https://github.com/epsilonrt/mbpoll.git
-        PKG_SOURCE_VERSION:=HEAD
-        PKG_MIRROR_HASH:=skip
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/epsilonrt/mbpoll.git
+PKG_SOURCE_VERSION:=v1.5.2
+PKG_MIRROR_HASH:=skip
 
-        PKG_BUILD_DIR:=\$(BUILD_DIR)/\$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-        include \$(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/package.mk
 
-        define Package/mbpoll
-          SECTION:=utils
-          CATEGORY:=Utilities
-          TITLE:=Modbus TCP/RTU polling tool
-          DEPENDS:=+libmodbus
-        endef
+define Package/mbpoll
+	SECTION:=utils
+	CATEGORY:=Utilities
+	TITLE:=Modbus TCP/RTU polling tool
+	DEPENDS:=+libmodbus
+endef
 
-        define Package/mbpoll/description
-          mbpoll is a command line Modbus master simulator
-        endef
+define Package/mbpoll/description
+	mbpoll is a command line Modbus master simulator
+endef
 
-        define Build/Prepare
-          mkdir -p \$(PKG_BUILD_DIR)
-          \$(CP) \$(PKG_SOURCE_DIR)/* \$(PKG_BUILD_DIR)/
-        endef
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+	$(CP) $(PKG_SOURCE_DIR)/* $(PKG_BUILD_DIR)/
+endef
 
-        define Build/Compile
-          \$(MAKE) -C \$(PKG_BUILD_DIR) \
-            CC="\$(TARGET_CC)" \
-            CFLAGS="\$(TARGET_CFLAGS)" \
-            LDFLAGS="\$(TARGET_LDFLAGS)" \
-            PREFIX=/usr
-        endef
+define Build/Compile
+	$(MAKE) -C $(PKG_BUILD_DIR) \
+	CC="$(TARGET_CC)" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	PREFIX=/usr
+endef
 
-        define Package/mbpoll/install
-          \$(INSTALL_DIR) \$(1)/usr/bin
-          \$(INSTALL_BIN) \$(PKG_BUILD_DIR)/mbpoll \$(1)/usr/bin/
-        endef
+define Package/mbpoll/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/usr/bin/
+endef
 
-        \$(eval \$(call BuildPackage,mbpoll))
-        EOF
+$(eval $(call BuildPackage,mbpoll))
+EOF
 
-    - name: Update feeds and prepare SDK
+    - name: Update feeds and install libmodbus
       run: |
         cd openwrt-sdk
         ./scripts/feeds update -a
@@ -104,6 +105,7 @@ jobs:
     - name: Build mbpoll package
       run: |
         cd openwrt-sdk
+        # 只使用 aarch64 目标
         make defconfig
         make package/mbpoll/compile V=s
 
