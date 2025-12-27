@@ -104,6 +104,7 @@ jobs:
     - name: Build mbpoll package
       run: |
         cd openwrt-sdk
+        make defconfig
         make package/mbpoll/compile V=s
 
     - name: Collect ipk
