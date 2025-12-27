@@ -54,7 +54,8 @@ jobs:
         cd openwrt-sdk
         mkdir -p package/mbpoll
         cd ..
-        cp mbpoll_MakeFile openwrt-sdk/package/mbpoll/Makefile
+        pwd
+        cp mbpoll_Makefile openwrt-sdk/package/mbpoll/Makefile
 
     - name: Update feeds and prepare SDK
       run: |
