@@ -24,20 +24,10 @@ define Package/mbpoll/description
   mbpoll is a command line Modbus master simulator
 endef
 
-define Build/Prepare
-  $(call Build/Prepare/Default)
-endef
-
-define Build/Compile
-  $(MAKE) -C $(PKG_BUILD_DIR) \
-  CC="$(TARGET_CC)" \
-  CFLAGS="$(TARGET_CFLAGS)" \
-  LDFLAGS="$(TARGET_LDFLAGS)"
-endef
-
 define Package/mbpoll/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/bin/
 endef
 
 $(eval $(call BuildPackage,mbpoll))
+
