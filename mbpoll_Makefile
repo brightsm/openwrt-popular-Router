@@ -10,8 +10,14 @@ PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_MIRROR_HASH:=skip
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
+# 👇 关键：启用补丁支持（即使使用 git）
 include $(INCLUDE_DIR)/package.mk
+
+# 👇 显式定义 Patch 步骤（可选，但推荐）
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	$(if $(strip $(PATCH_DIR)),$(call PatchDir,$(PKG_BUILD_DIR),$(PATCH_DIR),*))
+endef
 
 define Package/mbpoll
   SECTION:=utils
@@ -36,5 +42,6 @@ define Package/mbpoll/install
 endef
 
 $(eval $(call BuildPackage,mbpoll))
+
 
 
