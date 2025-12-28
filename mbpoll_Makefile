@@ -1,32 +1,38 @@
+# 进入 mbpoll 包目录
+cd /home/runner/work/openwrt-popular-Router/openwrt-popular-Router/openwrt-sdk/package/mbpoll
+
+# 覆盖旧 Makefile
+cat > Makefile << 'EOF'
 include $(TOPDIR)/rules.mk
 
-# 基础配置
+# 基础配置（关键：添加.tar.gz后缀）
 PKG_NAME:=mbpoll
 PKG_VERSION:=1.5.2
 PKG_RELEASE:=1
 
-# 关键：指定本地源码目录（你的build_dir里已有的mbpoll-1.5.2）
-PKG_SOURCE_PROTO:=local
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-# 单独创建编译目录，避免污染源码，且确保CMake生成的Makefile在这
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-build
+# 正确配置本地压缩包路径（匹配你下载的dl/mbpoll-1.5.2.tar.gz）
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=file://$(TOPDIR)/dl/  # 指向SDK的dl目录
+PKG_HASH:=skip  # 本地包跳过哈希校验
 
-# 依赖：必须包含cmake（OpenWRT的cmake.mk依赖）和libmodbus
+# 编译目录配置
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-build
+PKG_UNPACK:=$(HOST_TAR) -C $(BUILD_DIR) -xzf $(DL_DIR)/$(PKG_SOURCE)
+
+# 依赖配置
 PKG_BUILD_DEPENDS:=libmodbus cmake
 PKG_INSTALL:=1
 
-# 引入OpenWRT核心编译规则和CMake专用规则
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-# 定义包信息
+# 包信息
 define Package/mbpoll
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Modbus client (RTU/TCP) for OpenWRT
   URL:=https://github.com/epsilonrt/mbpoll
-  DEPENDS:=+libmodbus  # 运行时依赖libmodbus库
+  DEPENDS:=+libmodbus
 endef
 
 define Package/mbpoll/description
@@ -34,13 +40,11 @@ define Package/mbpoll/description
   Compiled for aarch64_cortex-a53_musl (OpenWRT 24.10.4).
 endef
 
-# 核心：CMake交叉编译配置（生成Makefile）
+# CMake 交叉编译配置
 define Build/Configure
-	# 确保编译目录存在
 	mkdir -p $(PKG_BUILD_DIR)
 	cd $(PKG_BUILD_DIR) && \
-	# 指定交叉编译工具链、libmodbus路径、输出路径
-	$(CMAKE) $(PKG_SOURCE_DIR) \
+	$(CMAKE) $(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION) \
 		-DCMAKE_SYSTEM_NAME=Linux \
 		-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
 		-DCMAKE_C_COMPILER=$(TARGET_CC) \
@@ -54,16 +58,16 @@ define Build/Configure
 		-DLIBMODBUS_LIBRARY=$(STAGING_DIR)/usr/lib/libmodbus.so
 endef
 
-# 编译规则：执行CMake生成的Makefile
+# 编译规则
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)
 endef
 
-# 安装规则：复制编译好的二进制文件到目标路径
+# 安装规则
 define Package/mbpoll/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/usr/bin/
 endef
 
-# 执行编译
 $(eval $(call BuildPackage,mbpoll))
+EOF
