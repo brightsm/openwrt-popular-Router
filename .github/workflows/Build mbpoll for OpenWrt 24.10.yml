@@ -53,11 +53,11 @@ jobs:
       run: |
         cd openwrt-sdk
         mkdir -p package/mbpoll
-        mkdir -p package/mbpoll/patch
+        mkdir -p package/mbpoll/patchs
         cd ..
         pwd
         cp mbpoll_Makefile openwrt-sdk/package/mbpoll/Makefile
-        cp mbpoll1.5.2-010-cmake.patch openwrt-sdk/package/mbpoll/patch/010-cmake-Set-minimum-required-version-to-3-5-for-CMake-4.patch
+        cp mbpoll1.5.2-010-cmake.patch openwrt-sdk/package/mbpoll/patchs/010-cmake-Set-minimum-required-version-to-3-5-for-CMake-4.patch
 
     - name: Update feeds and prepare SDK
       run: |
