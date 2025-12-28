@@ -5,40 +5,42 @@ PKG_NAME:=mbpoll
 PKG_VERSION:=1.5.2
 PKG_RELEASE:=1
 
-# 本地源码路径（根据你的build_dir路径适配，已下载到build_dir可直接用）
+# 关键：指定本地源码目录（你的build_dir里已有的mbpoll-1.5.2）
 PKG_SOURCE_PROTO:=local
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/openwrt-build
+# 单独创建编译目录，避免污染源码，且确保CMake生成的Makefile在这
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-build
 
-# 依赖配置（编译+运行时依赖libmodbus）
+# 依赖：必须包含cmake（OpenWRT的cmake.mk依赖）和libmodbus
 PKG_BUILD_DEPENDS:=libmodbus cmake
 PKG_INSTALL:=1
 
+# 引入OpenWRT核心编译规则和CMake专用规则
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk  # 引入OpenWRT的CMake编译支持
+include $(INCLUDE_DIR)/cmake.mk
 
-# 定义编译目标
+# 定义包信息
 define Package/mbpoll
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=A command line Modbus client (Modbus RTU/TCP)
+  TITLE:=Modbus client (RTU/TCP) for OpenWRT
   URL:=https://github.com/epsilonrt/mbpoll
   DEPENDS:=+libmodbus  # 运行时依赖libmodbus库
 endef
 
-# 描述信息
 define Package/mbpoll/description
-  mbpoll is a command line utility to communicate with Modbus slaves (RTU or TCP).
-  It supports Modbus TCP/IP, RTU over RS232/485, and can read/write coils, registers.
+  mbpoll is a command-line Modbus client supporting RTU (RS232/485) and TCP/IP.
+  Compiled for aarch64_cortex-a53_musl (OpenWRT 24.10.4).
 endef
 
-# CMake交叉编译配置（核心：适配aarch64架构）
+# 核心：CMake交叉编译配置（生成Makefile）
 define Build/Configure
-	# 创建独立编译目录（避免污染源码）
+	# 确保编译目录存在
 	mkdir -p $(PKG_BUILD_DIR)
-	# 执行CMake配置，指定交叉编译工具链、libmodbus路径
-	$(CMAKE) \
+	cd $(PKG_BUILD_DIR) && \
+	# 指定交叉编译工具链、libmodbus路径、输出路径
+	$(CMAKE) $(PKG_SOURCE_DIR) \
 		-DCMAKE_SYSTEM_NAME=Linux \
 		-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
 		-DCMAKE_C_COMPILER=$(TARGET_CC) \
@@ -46,12 +48,18 @@ define Build/Configure
 		-DCMAKE_FIND_ROOT_PATH=$(STAGING_DIR)/usr \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS="-Os -mcpu=cortex-a53 -fPIC" \
+		-DCMAKE_EXE_LINKER_FLAGS="-L$(STAGING_DIR)/usr/lib -lmodbus" \
 		-DLIBMODBUS_INCLUDE_DIR=$(STAGING_DIR)/usr/include \
-		-DLIBMODBUS_LIBRARY=$(STAGING_DIR)/usr/lib/libmodbus.so \
-		$(PKG_SOURCE_DIR)
+		-DLIBMODBUS_LIBRARY=$(STAGING_DIR)/usr/lib/libmodbus.so
 endef
 
-# 安装规则（复制编译后的二进制文件到目标路径）
+# 编译规则：执行CMake生成的Makefile
+define Build/Compile
+	$(MAKE) -C $(PKG_BUILD_DIR)
+endef
+
+# 安装规则：复制编译好的二进制文件到目标路径
 define Package/mbpoll/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/usr/bin/
