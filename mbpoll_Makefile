@@ -1,73 +1,37 @@
-# 进入 mbpoll 包目录
-cd /home/runner/work/openwrt-popular-Router/openwrt-popular-Router/openwrt-sdk/package/mbpoll
-
-# 覆盖旧 Makefile
-cat > Makefile << 'EOF'
 include $(TOPDIR)/rules.mk
 
-# 基础配置（关键：添加.tar.gz后缀）
 PKG_NAME:=mbpoll
 PKG_VERSION:=1.5.2
 PKG_RELEASE:=1
 
-# 正确配置本地压缩包路径（匹配你下载的dl/mbpoll-1.5.2.tar.gz）
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=file://$(TOPDIR)/dl/  # 指向SDK的dl目录
-PKG_HASH:=skip  # 本地包跳过哈希校验
+PKG_SOURCE_URL:=https://github.com/epsilonrt/mbpoll/archive/refs/tags/v$(PKG_VERSION).tar.gz?
+PKG_HASH:=7d960cd4459b5f7c2412abc51aba93a20b6114fd75d1de412b1e540cfb63bfec
 
-# 编译目录配置
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-build
-PKG_UNPACK:=$(HOST_TAR) -C $(BUILD_DIR) -xzf $(DL_DIR)/$(PKG_SOURCE)
-
-# 依赖配置
-PKG_BUILD_DEPENDS:=libmodbus cmake
-PKG_INSTALL:=1
+PKG_MAINTAINER:=Jens Wagner <jens@wagner2013.de>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-# 包信息
 define Package/mbpoll
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=Modbus client (RTU/TCP) for OpenWRT
-  URL:=https://github.com/epsilonrt/mbpoll
+  TITLE:=Command line utility to communicate with Modbus slaves (RTU/TCP)
+  URL:=https://epsilonrt.fr/
   DEPENDS:=+libmodbus
 endef
 
 define Package/mbpoll/description
-  mbpoll is a command-line Modbus client supporting RTU (RS232/485) and TCP/IP.
-  Compiled for aarch64_cortex-a53_musl (OpenWRT 24.10.4).
+  mbpoll is a command line utility to communicate with Modbus slaves
+  (RTU/TCP). It can handle discrete inputs, binary outputs (coils),
+  input registers and write output registers (holding registers)
 endef
 
-# CMake 交叉编译配置
-define Build/Configure
-	mkdir -p $(PKG_BUILD_DIR)
-	cd $(PKG_BUILD_DIR) && \
-	$(CMAKE) $(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION) \
-		-DCMAKE_SYSTEM_NAME=Linux \
-		-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-		-DCMAKE_C_COMPILER=$(TARGET_CC) \
-		-DCMAKE_CXX_COMPILER=$(TARGET_CXX) \
-		-DCMAKE_FIND_ROOT_PATH=$(STAGING_DIR)/usr \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_C_FLAGS="-Os -mcpu=cortex-a53 -fPIC" \
-		-DCMAKE_EXE_LINKER_FLAGS="-L$(STAGING_DIR)/usr/lib -lmodbus" \
-		-DLIBMODBUS_INCLUDE_DIR=$(STAGING_DIR)/usr/include \
-		-DLIBMODBUS_LIBRARY=$(STAGING_DIR)/usr/lib/libmodbus.so
-endef
-
-# 编译规则
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)
-endef
-
-# 安装规则
 define Package/mbpoll/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mbpoll $(1)/bin/
 endef
 
 $(eval $(call BuildPackage,mbpoll))
-EOF
