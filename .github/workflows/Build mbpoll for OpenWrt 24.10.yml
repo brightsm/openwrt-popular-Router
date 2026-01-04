@@ -7,9 +7,19 @@ on:
         description: 'Enable SSH connection to GitHub Actions runner'
         required: false
         default: 'false'
-  push:
-    tags:
-      - "v*"
+
+env:
+  #REPO_URL: https://githubfast.com/bwnqx/immortalwrt-mt798x
+  REPO_URL: https://github.com/crosstool-ng/crosstool-ng
+  REPO_BRANCH: master  
+  CONFIG_FILE: imx280a_cross_toolchain.config
+  DIY_P1_SH: install_build_package.sh  
+  UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
 
 jobs:
   build:
