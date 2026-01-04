@@ -35,6 +35,7 @@ jobs:
           rsync \
           wget \
           unzip \
+          cmake \
           file
 
     - name: Download OpenWrt 24.10 SDK (mediatek filogic)
