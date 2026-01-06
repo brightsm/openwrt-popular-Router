@@ -1,4 +1,4 @@
-name: Build mbpoll for OpenWrt 24.10
+name: mbpoll v1.5.2 for rax3000M  24.10
 
 on:
   workflow_dispatch:
